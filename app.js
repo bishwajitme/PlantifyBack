@@ -12,7 +12,7 @@ var expressValidator = require('express-validator');
 var cors = require('cors');
 
 var mongo = require('mongodb');
-var db = require('monk')('localhost/nodeblog');
+var db = require('monk')('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
 
 var routes = require('./routes/index');
 var posts = require('./routes/posts');

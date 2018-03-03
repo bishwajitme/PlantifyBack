@@ -3,7 +3,7 @@ var router = express.Router();
 var multer = require('multer');
 var upload = multer({ dest: './public/images' })
 var mongo = require('mongodb');
-var db = require('monk')('localhost/nodeblog');
+var db = require('monk')('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
 
 router.get('/show/:id', function(req, res, next) {
 	var posts = db.get('posts');
