@@ -85,7 +85,7 @@ router.post('/add', upload.single('mainimage'), function(req, res, next) {
 
 
 
-router.post('/api/add', function(req, res, next) {
+router.post('/api/add', upload.single('mainimage'), function(req, res, next) {
     // Get Form Values
     var title = req.body.title;
     var category= req.body.category;
