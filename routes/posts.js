@@ -145,9 +145,9 @@ router.post('/images', upload.single('image'), function(req, res, next)  {
         "mainimage": mainimage,
     }, function(err, post){
         if(err){
-            res.send({image:mainimage});
+            res.send({"image":mainimage});
         } else {
-            res.json({image:mainimage});
+            res.json({"image":mainimage});
         }
     });
 });
