@@ -1,0 +1,40 @@
+extends layout
+
+block content
+
+ .container.weather
+  #openweathermap-widget-21
+  script(src='//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/d3.min.js')
+  script.
+      window.myWidgetParam ? window.myWidgetParam : window.myWidgetParam = [];  window.myWidgetParam.push({
+          id: 21,
+          cityid: '2663536',
+          appid: 'b5b768dab9582a6ad6a96473770df313',
+          units: 'metric',
+          containerid: 'openweathermap-widget-21',
+      });  (function () {
+          var script = document.createElement('script');
+          script.async = true;
+          script.charset = "utf-8";
+          script.src = "//openweathermap.org/themes/openweathermap/assets/vendor/owm/js/weather-widget-generator.js";
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(script, s);
+      })();
+
+
+ if posts
+   each post, i in posts
+    .post
+    .container
+     h1
+      a(href='/posts/show/#{post._id}')
+       =post.title
+     p.meta Posted in 
+      a(href='/categories/show/#{post.category}') #{post.category} 
+      by #{post.author} 
+      on #{moment(post.date).format("MM-DD-YYYY")}
+     img(src='/images/#{post.mainimage}')
+     !=truncateText(post.body,400)
+     button#delete(onclick='deletePost()')  Delete
+     a.more(href='/posts/show/#{post._id}') Read More
+

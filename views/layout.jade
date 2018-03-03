@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    
+
+  body
+      .container.logo
+          img.logo(src='/images/travel-logo.jpg')
+       .container.nav
+          nav.navbar.navbar-expand-lg
+           #navbarNav.collapse.navbar-collapse
+                  ul.navbar-nav
+              li.nav-item
+              a.nav-link(href='/') Home
+              li.nav-item
+              a.nav-link(href='/posts/add') Add Post
+              li.nav-item
+              a.nav-link(href='/categories/add') Add Category
+          != messages()
+    .container
+       block content
+    footer
+     p WebSign &copy; 2018
