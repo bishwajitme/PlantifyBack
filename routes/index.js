@@ -12,6 +12,18 @@ router.get('/', function(req, res, next) {
 	});
 });
 
+router.post('/delete/:id', function(req, res, next) {
+    var posts = db.get('posts');
+    var id = req.params.id;
+    console.log('id' + id);
+    // posts.remove({"_id": db.id(id)});
+    posts.remove({"_id": id});
+    // posts.removeById(id);
+    //res.json({"id":id});
+    res.redirect('/');
+
+});
+
 router.get('/api/posts', function(req, res, next) {
     console.log("fetching reviews");
     var db = req.db;

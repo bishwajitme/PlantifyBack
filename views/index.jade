@@ -35,6 +35,9 @@ block content
       on #{moment(post.date).format("MM-DD-YYYY")}
      img(src='/images/#{post.mainimage}')
      !=truncateText(post.body,400)
-     button#delete(onclick='deletePost()')  Delete
+     form(method='post', action='/delete/'+post._id)
+
+        input.btn.btn-default(name='submit',type='submit',value='Delete' onClick="return confirm('Are you sure you want to delete?')")
      a.more(href='/posts/show/#{post._id}') Read More
+
 
