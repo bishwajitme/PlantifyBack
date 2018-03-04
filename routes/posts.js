@@ -24,7 +24,7 @@ router.get('/api/show/:id', function(req, res, next) {
     });
 });
 
-router.post('/api/delete/', function(req, res, next) {
+router.post('/api/delete', function(req, res, next) {
     var posts = db.get('posts');
     var id = req.body.id;
 
