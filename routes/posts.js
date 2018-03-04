@@ -28,8 +28,8 @@ router.post('/api/delete', function(req, res, next) {
     var posts = db.get('posts');
     var id = req.body.id;
 
-    // userData.remove({"_id": db.id(id)});
-    posts.removeById(id);
+    posts.remove({"_id": db.id(id)});
+    //posts.remove(id);
 });
 
 router.get('/add', function(req, res, next) {
