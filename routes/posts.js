@@ -131,8 +131,8 @@ router.post('/api/add', upload.single('image'), function(req, res, next) {
             "errors": errors
         });
     } else {
-        var posts = db.get('posts');
-        posts.insert({
+        //var posts = db.get('posts');
+        Posts.create({
             "title": title,
             "body": body,
             "category": category,
