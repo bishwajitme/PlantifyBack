@@ -6,13 +6,19 @@ var cookieParser = require('cookie-parser');
 //var exphbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var multer = require('multer');
 var upload = multer({ dest: 'uploads/' })
 var expressValidator = require('express-validator');
 var cors = require('cors');
 
-var mongo = require('mongodb');
-var db = require('monk')('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
+/*var mongo = require('mongodb');
+var db = require('monk')('localhost/nodeblog');*/
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
+var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var posts = require('./routes/posts');
@@ -60,6 +66,12 @@ app.use(session({
     resave: true
 }));
 
+
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Express Validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
@@ -77,25 +89,33 @@ app.use(expressValidator({
     };
   }
 }));
-
-
-// Connect-Flash
-app.use(require('connect-flash')());
-app.use(function (req, res, next) {
-  res.locals.messages = require('express-messages')(req, res);
-  next();
-});
-
 // Make our db accessible to our router
 app.use(function(req,res,next){
     req.db = db;
     next();
 });
 
+// Connect-Flash
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.info = req.flash('success_msg');
+    res.locals.login = req.isAuthenticated();
+    res.locals.user = req.user || null;
+  next();
+});
+
+
+
 app.use('/', routes);
 app.use('/posts', posts);
 app.use('/categories', categories);
 app.use('/users', users);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -108,6 +128,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
+
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -117,6 +138,7 @@ if (app.get('env') === 'development') {
     });
   });
 }
+
 
 // production error handler
 // no stacktraces leaked to user

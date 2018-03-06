@@ -1,8 +1,10 @@
-var db = require('monk')('localhost/nodeblog');
+var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+mongoose.connect('mongodb://localhost/loginapp');
+var db = mongoose.connection;
 
 // User Schema
-/*var UserSchema = mongoose.Schema({
+var UserSchema = mongoose.Schema({
 	username: {
 		type: String,
 		index:true,
@@ -24,11 +26,11 @@ var bcrypt = require('bcryptjs');
     resetPasswordExpires:{
         type: Date
     }
-});*/
+});
 
-//var User = module.exports = mongoose.model('User', UserSchema);
+var User = module.exports = mongoose.model('User', UserSchema);
 
-const User = db.get('users')
+//const User = db.get('users')
 
 module.exports.createUser = function(newUser, callback){
 	bcrypt.genSalt(10, function(err, salt) {

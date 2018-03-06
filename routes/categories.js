@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var mongo = require('mongodb');
-var db = require('monk')('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
+var Posts = require('../models/post');
+var Categories = require('../models/category');
 
 router.get('/show/:category', function(req, res, next) {
-	var posts = db.get('posts');
+	//var posts = db.get('posts');
 
-	posts.find({category: req.params.category},{},function(err, posts){
+	Posts.find({category: req.params.category},{},function(err, posts){
 		res.render('index',{
   			'title': req.params.category,
   			'posts': posts
@@ -35,8 +35,8 @@ router.post('/add', function(req, res, next) {
 			"errors": errors
 		});
 	} else {
-		var categories = db.get('categories');
-		categories.insert({
+		//var categories = db.get('categories');
+        Categories.create({
 			"name": name,
 		}, function(err, post){
 			if(err){

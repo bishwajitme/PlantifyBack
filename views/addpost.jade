@@ -9,7 +9,7 @@ block content
 	form(method='post', action='/posts/add', enctype="multipart/form-data")
 		.form-group
 			label Title:
-			input.form-control(name='title', type='text')
+			input.form-control(name='title', type='text' required)
 		.form-group
 			label Category
 			select.form-control(name='category')
@@ -17,7 +17,7 @@ block content
 					option(value='#{category.name}') #{category.name}
 		.form-group
 			label Body
-			textarea.form-control(name='body', id='body')
+			textarea.form-control(name='body', id='body' required)
 		.form-group
 			label Main Image:
 			input.form-control(name='mainimage', type='file')

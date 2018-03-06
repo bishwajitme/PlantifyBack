@@ -2,13 +2,15 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var upload = multer({ dest: './public/images' })
-var mongo = require('mongodb');
-var db = require('monk')('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
+/*var mongo = require('mongodb');
+var db = require('monk')('localhost/nodeblog');*/
+var Posts = require('../models/post');
+var Categories = require('../models/category');
 
 router.get('/show/:id', function(req, res, next) {
-	var posts = db.get('posts');
+	//var posts = db.get('posts');
 
-	posts.findById(req.params.id,function(err, post){
+	Posts.findById(req.params.id,function(err, post){
 		res.render('show',{
   			'post': post
   		});
@@ -17,28 +19,33 @@ router.get('/show/:id', function(req, res, next) {
 
 
 router.get('/api/show/:id', function(req, res, next) {
-    var posts = db.get('posts');
+  //  var posts = db.get('posts');
 
-    posts.findById(req.params.id,function(err, post){
+    Posts.findById(req.params.id,function(err, post){
         res.json(post);
     });
 });
 
 router.delete('/api/delete/:id', function(req, res, next) {
-    var posts = db.get('posts');
+    //var posts = db.get('posts');
     var id = req.params.id;
     console.log('id' + id);
     // posts.remove({"_id": db.id(id)});
-    posts.remove({"_id": id});
+    // Posts.deleteOne({"_id": id});
+    Posts.deleteOne({ _id: id }, function (err) {
+        console.log(err);
+    });
     // posts.removeById(id);
     res.json({"id":id});
 
 });
 
-router.get('/add', function(req, res, next) {
-	var categories = db.get('categories');
 
-	categories.find({},{},function(err, categories){
+router.get('/add', function(req, res, next) {
+	//var categories = db.get('categories');
+
+    Categories.find({},{},function(err, categories){
+        console.log(categories);
 		res.render('addpost',{
   			'title': 'Add Post',
   			'categories': categories
@@ -73,8 +80,8 @@ router.post('/add', upload.single('mainimage'), function(req, res, next) {
             "errors": errors
         });
     } else {
-        var posts = db.get('posts');
-        posts.insert({
+      // var posts = db.get('posts');
+        Posts.create({
             "title": title,
             "body": body,
             "category": category,
@@ -181,8 +188,8 @@ router.post('/addcomment', function(req, res, next) {
 	var errors = req.validationErrors();
 
 	if(errors){
-		var posts = db.get('posts');
-		posts.findById(postid, function(err, post){
+		//var posts = db.get('posts');
+		Posts.findById(postid, function(err, post){
 			res.render('show',{
 				"errors": errors,
 				"post": post
@@ -196,9 +203,9 @@ router.post('/addcomment', function(req, res, next) {
 			"commentdate": commentdate
 		}
 
-		var posts = db.get('posts');
+		//var posts = db.get('posts');
 
-		posts.update({
+		Posts.update({
 			"_id": postid
 		},{
 			$push:{
@@ -236,8 +243,8 @@ router.post('/api/addcomment', function(req, res, next) {
     var errors = req.validationErrors();
 
     if(errors){
-        var posts = db.get('posts');
-        posts.findById(postid, function(err, post){
+       // var posts = db.get('posts');
+        Posts.findById(postid, function(err, post){
             res.render('show',{
                 "errors": errors,
                 "post": post
@@ -251,9 +258,9 @@ router.post('/api/addcomment', function(req, res, next) {
             "commentdate": commentdate
         }
 
-        var posts = db.get('posts');
+     //   var posts = db.get('posts');
 
-        posts.update({
+        Posts.update({
             "_id": postid
         },{
             $push:{

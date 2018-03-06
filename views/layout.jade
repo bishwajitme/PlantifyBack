@@ -11,13 +11,24 @@ html
        .container.nav
           nav.navbar.navbar-expand-lg
            #navbarNav.collapse.navbar-collapse
-                  ul.navbar-nav
-              li.nav-item
-              a.nav-link(href='/') Home
-              li.nav-item
-              a.nav-link(href='/posts/add') Add Post
-              li.nav-item
-              a.nav-link(href='/categories/add') Add Category
+            ul.navbar-nav
+            if login
+                  li.nav-item
+                  a.nav-link(href='/') Home
+                  li.nav-item
+                  a.nav-link(href='/posts/add') Add Post
+                  li.nav-item
+                  a.nav-link(href='/categories/add') Add Category
+                  li.nav-item
+                  a.p-2.text-white.nav-link(href="/users/logout") Logout
+            else
+                li.nav-item
+                 a.nav-link(href='/') Home
+                 li.nav-item
+                 a.p-2.text-white.nav-link(href="/users/login") Login
+                 li.nav-item
+                 a.p-2.text-white.nav-link(href="/users/register") Register
+
           != messages()
     .container
        block content

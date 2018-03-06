@@ -9,9 +9,9 @@ block content
     form(method='post', action='/users/login')
         .form-group
             label User Name:
-            input.form-control(name='username', type='text')
+            input.form-control(name='username', type='text' required)
             br
             label Password:
             input.form-control(name='password', type='password')
             br
-            input.btn.btn-default(name='submit',type='submit',value='Submit')
+            input.btn.btn-default(name='submit',type='submit',value='Submit' required)
