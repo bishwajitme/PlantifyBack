@@ -35,9 +35,9 @@ router.post('/delete/:id', function(req, res, next) {
 
 router.get('/api/posts', function(req, res, next) {
     console.log("fetching reviews");
-    var db = req.db;
-    var posts = db.get('posts');
-    posts.find({}, {}, function(err, posts){
+   // var db = req.db;
+   // var posts = db.get('posts');
+    Posts.find({}, {}, function(err, posts){
         res.json(posts);
     });
 });
