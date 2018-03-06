@@ -8,7 +8,7 @@ var PostSchema = new Schema({
     "author": String,
     "date": String,
     "mainimage": String,
-    "loc": [],
+    "location": [],
     "comments":[]
 });
 
