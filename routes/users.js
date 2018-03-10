@@ -228,16 +228,12 @@ router.get('/reset/:token', function(req, res) {
 });
 
 router.post('/contact', function(req, res) {
-    async.waterfall([
-        function(done) {
-
-              let senderName = req.body.name;
-              let senderEmail = req.body.email;
-              let message = req.body.body;
 
 
-        },
-        function(user, done) {
+              var senderName = req.body.name;
+              var senderEmail = req.body.email;
+              var message = req.body.body;
+
             var smtpTransport = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
@@ -255,14 +251,10 @@ router.post('/contact', function(req, res) {
             };
             smtpTransport.sendMail(mailOptions, function(err) {
                 req.flash('success_msg', 'Success! Contact form submitted.');
-                res.json({'contat':'post'});
-                done(err);
+                res.json({'contact':'post'});
             });
-        }
-    ], function(err) {
-        res.redirect('/');
-    });
 });
+
 
 router.post('/forgot', function(req, res, next) {
     async.waterfall([
