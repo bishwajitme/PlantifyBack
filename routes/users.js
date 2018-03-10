@@ -227,9 +227,7 @@ router.get('/reset/:token', function(req, res) {
     });
 });
 
-router.post('/contact', function(req, res) {
-
-
+router.post('/contact', function(req, res, next) {
               var senderName = req.body.name;
               var senderEmail = req.body.email;
               var message = req.body.body;
@@ -245,7 +243,7 @@ router.post('/contact', function(req, res) {
             });
             var mailOptions = {
                 to: 'bh222gp@student.lnu.se',
-                from: user.email,
+                from: senderEmail,
                 subject: 'Contact Form Submission From Travel Blog by '+ senderName,
                 text: message
             };
