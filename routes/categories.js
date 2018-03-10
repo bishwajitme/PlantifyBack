@@ -20,6 +20,16 @@ router.get('/add', function(req, res, next) {
 	});
 });
 
+router.get('/api/categories', function(req, res, next) {
+    console.log("fetching category");
+    // var db = req.db;
+    // var posts = db.get('posts');
+    Categories.find({}, {}, function(err, posts){
+        res.json(posts);
+    });
+});
+
+
 router.post('/add', function(req, res, next) {
   // Get Form Values
   var name = req.body.name;
@@ -49,5 +59,34 @@ router.post('/add', function(req, res, next) {
 		});
 	}
 });
+
+router.post('/api/add', function(req, res, next) {
+    // Get Form Values
+    var name = req.body.name;
+
+    // Form Validation
+    req.checkBody('name','Name field is required').notEmpty();
+
+    // Check Errors
+    var errors = req.validationErrors();
+
+    if(errors){
+        res.render('addpost',{
+            "errors": errors
+        });
+    } else {
+        //var categories = db.get('categories');
+        Categories.create({
+            "name": name,
+        }, function(err, post){
+            if(err){
+                res.send(err);
+            } else {
+                res.json(post);
+            }
+        });
+    }
+});
+
 
 module.exports = router;
