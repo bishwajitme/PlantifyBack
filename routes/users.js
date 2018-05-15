@@ -68,9 +68,11 @@ router.use(expressValidator({
 router.post('/register', function(req, res){
 	var name = req.body.name;
 	var email = req.body.email;
-	var username = req.body.username;
+	var username = req.body.email;
 	var password = req.body.password;
-	var password2 = req.body.password2;
+	var address = req.body.address;
+    var city = req.body.city;
+    var country = req.body.country;
 
 	// Validation
 	req.checkBody('name', 'Name is required').notEmpty();
@@ -80,7 +82,7 @@ router.post('/register', function(req, res){
 	req.checkBody('username', 'Username is required').notEmpty();
     req.checkBody('username', 'Username already in use').isUsernameAvailable();
 	req.checkBody('password', 'Password is required').notEmpty();
-	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+	
 
     req.asyncValidationErrors().then(() => {
         //no errors, create user
@@ -88,7 +90,11 @@ router.post('/register', function(req, res){
             name: name,
             email:email,
             username: username,
-            password: password
+            password: password,
+            address: address,
+            city: city,
+            country: country
+
         });
 
     User.createUser(newUser, function(err, user){
@@ -97,7 +103,7 @@ router.post('/register', function(req, res){
     });
 
     req.flash('success_msg', 'You are registered and can now login');
-
+   res.json({user:'added'});
     res.redirect('/users/login');
 }).catch((errors) => {
 
@@ -109,6 +115,98 @@ router.post('/register', function(req, res){
 });
 
 });
+
+router.post('/api/register', function(req, res, next){
+    var name = req.body.name;
+    var email = req.body.email;
+    var username = req.body.username;
+    var password = req.body.password;
+    var address = req.body.address;
+    var city = req.body.city;
+    var country = req.body.country;
+
+    // Validation
+    req.checkBody('name', 'Name is required').notEmpty();
+    req.checkBody('email', 'Email is required').notEmpty();
+    req.checkBody('email', 'Email is not valid').isEmail();
+    req.checkBody('email', 'Email already in use').isEmailAvailable();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('username', 'Username already in use').isUsernameAvailable();
+    req.checkBody('password', 'Password is required').notEmpty();
+    
+
+    req.asyncValidationErrors().then(() => {
+        //no errors, create user
+        var newUser = new User({
+            name: name,
+            email:email,
+            username: username,
+            password: password,
+            address: address,
+            city: city,
+            country: country
+
+        });
+
+    User.createUser(newUser, function(err, user){
+        if(err) throw err;
+        //console.log(user);
+    });
+
+   res.json({"user":'added'});
+
+}).catch((errors) => {
+
+        if(errors) {
+            res.render('register',{
+                errors:errors
+            });
+        };
+});
+
+});
+
+
+router.post('/api/login', function(req, res, next){
+
+    var username = req.body.username;
+    var password = req.body.password;
+
+    if(!password || !username) {
+        return res.status(400).json({ message: "We need both username and password." });
+    }
+
+
+
+    User.findOne({username: username}, function(err, user) {
+
+        if (err) {
+            return res.status(500).json({ message: ErrorMessages.unknown });
+        }
+
+        if (!user) {
+            return res.status(400).json({ message: "Woops, wrong username or password." });
+        }
+
+       
+
+        User.comparePassword(password, user.password, function(err, isMatch){
+        if(err){
+             return res.status(500).json({ message: ErrorMessages.unknown });
+         } 
+        if(isMatch){
+           return res.status(200).json({ message: "OK", authToken: "1644465662244666455555", username: username });
+        } else {
+             return res.status(400).json({ message: "Invalid Password" });
+        }
+    });
+
+    });
+
+});
+
+
+
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -189,8 +287,8 @@ router.post('/forgot', function(req, res, next) {
                 port: 587,
                 secure: false, // true for 465, false for other ports
                 auth: {
-                    user: 'bishwajitlnu@gmail.com', // generated ethereal user
-                    pass: 'Halder123'  // generated ethereal password
+                    user: 'xxxx@gmail.com', // generated ethereal user
+                    pass: '********'  // generated ethereal password
                 }
             });
             var mailOptions = {
@@ -237,8 +335,8 @@ router.post('/contact', function(req, res, next) {
                 port: 587,
                 secure: false, // true for 465, false for other ports
                 auth: {
-                    user: 'bishwajitlnu@gmail.com', // generated ethereal user
-                    pass: 'Halder123'  // generated ethereal password
+                    user: 'xxxxx@gmail.com', // generated ethereal user
+                    pass: '*********'  // generated ethereal password
                 }
             });
             var mailOptions = {
@@ -250,7 +348,7 @@ router.post('/contact', function(req, res, next) {
             };
             smtpTransport.sendMail(mailOptions, function(err) {
                 req.flash('success_msg', 'Success! Contact form submitted.');
-                res.json({'contact':'post'});
+                res.json({'contact':err});
             });
 });
 
@@ -284,8 +382,8 @@ router.post('/forgot', function(req, res, next) {
                 port: 587,
                 secure: false, // true for 465, false for other ports
                 auth: {
-                    user: 'bishwajitlnu@gmail.com', // generated ethereal user
-                    pass: 'Halder123'  // generated ethereal password
+                    user: 'xxxxx@gmail.com', // generated ethereal user
+                    pass: '********'  // generated ethereal password
                 }
             });
             var mailOptions = {

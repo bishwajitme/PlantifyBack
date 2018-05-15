@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
-mongoose.connect('mongodb://localhost/loginapp');
+mongoose.connect('mongodb://localhost/nodeblog');
 var db = mongoose.connection;
 
 // User Schema
@@ -20,6 +20,15 @@ var UserSchema = mongoose.Schema({
 	name: {
 		type: String
 	},
+    address: {
+        type: String
+    },
+    city: {
+        type: String
+    },
+    country: {
+        type: String
+    },
     resetPasswordToken: {
         type: String
     },

@@ -6,6 +6,8 @@ var upload = multer({ dest: './public/images' })
 var db = require('monk')('localhost/nodeblog');*/
 var Posts = require('../models/post');
 var Categories = require('../models/category');
+var PhyActivity = require('../models/phy-activity');
+var Score = require('../models/score');
 
 router.get('/show/:id', function(req, res, next) {
 	//var posts = db.get('posts');
@@ -110,7 +112,7 @@ router.post('/api/add', upload.single('image'), function(req, res, next) {
     var body = req.body.body;
     var author = req.body.author;
     var date = new Date();
-    var location = req.body.location;
+    var score = req.body.score;
 
     // Check Image Upload
     if(req.file){
@@ -139,7 +141,7 @@ router.post('/api/add', upload.single('image'), function(req, res, next) {
             "date": date,
             "author": author,
             "mainimage": mainimage,
-            "location":location
+            'score': score
         }, function(err, post){
             if(err){
                 res.send(err);
@@ -278,5 +280,101 @@ router.post('/api/addcomment', function(req, res, next) {
     }
 });
 
+
+
+router.post('/api/addpc', function(req, res, next) {
+    // Get Form Values
+    var activitytype = req.body.activitytype;
+    var distance = req.body.distance;
+    var duration = req.body.duration;
+    var username = req.body.username;
+    var exercisedate = new Date();
+
+    // Form Validation
+    req.checkBody('activitytype','activitytype field is required').notEmpty();
+    req.checkBody('distance','distance field is required but never displayed').notEmpty();
+    req.checkBody('duration','duration is not formatted properly').notEmpty();
+
+
+    // Check Errors
+    var errors = req.validationErrors();
+
+    if(errors){
+        return res.status(500).json({ message: errors });
+    } else {
+        //var posts = db.get('posts');
+        PhyActivity.create({
+            "activitytype": activitytype,
+            "distance": distance,
+            "duration": duration,
+            "date": exercisedate,
+            "username": username
+        }, function(err, post){
+            if(err){
+                return res.status(400).json({ message: err });
+            } else {
+                return res.status(200).json({message:'post'});
+            }
+        });
+    }
+});
+
+
+
+router.post('/api/addscore', function(req, res, next) {
+    // Get Form Values
+    var score = req.body.score;
+    var categoryID = req.body.category;
+    var username = req.body.author;
+    var challengedate = new Date();
+
+    // Form Validation
+    req.checkBody('score','activitytype field is required').notEmpty();
+
+    // Check Errors
+    var errors = req.validationErrors();
+
+    if(errors){
+        return res.status(500).json({ message: errors });
+    } else {
+        //var posts = db.get('posts');
+        Score.create({
+            "score": score,
+            "categoryid": categoryID,
+            "date": challengedate,
+            "username": username
+        }, function(err, post){
+            if(err){
+                return res.status(400).json({ message: err });
+            } else {
+                return res.status(200).json({message:'post'});
+            }
+        });
+    }
+});
+
+router.get('/api/score/:username', function(req, res, next) {
+
+    Score.aggregate([
+        { $match: {
+            username: req.params.username
+        }},
+        { $group: {
+            _id: "$username",
+            total: { $sum: "$score"  },
+            count: {$sum: 1}
+        }}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            res.json(err);
+        }
+        console.log(result);
+        res.json(result);
+
+    });
+
+
+});
 
 module.exports = router;

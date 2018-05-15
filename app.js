@@ -17,7 +17,8 @@ var cors = require('cors');
 var db = require('monk')('localhost/nodeblog');*/
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://travelblog:travelblog@ds255768.mlab.com:55768/travelblog');
+//mongoose.connect('mongodb://travelblog:xxx@xx.mlab.com:55768/xx');
+mongoose.connect('mongodb://localhost/nodeblog');
 var db = mongoose.connection;
 
 var routes = require('./routes/index');
