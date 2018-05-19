@@ -413,7 +413,7 @@ router.get('/api/scoresort/', function(req, res, next) {
             count: {$sum: 1}
         }},
         {$sort: {total: -1}},
-        { $limit : 1 }
+        { $limit : 5 }
     ], function (err, result) {
         if (err) {
             console.log(err);
