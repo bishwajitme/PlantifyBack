@@ -377,4 +377,52 @@ router.get('/api/score/:username', function(req, res, next) {
 
 });
 
+
+router.get('/api/chacount/:username', function(req, res, next) {
+
+    Score.aggregate([
+        { $match: {
+            username: req.params.username
+        }},
+        { $group: {
+            _id: "$username",
+            total: { $sum: "$score"  },
+            count: {$sum: 1}
+        }}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            res.json(err);
+        }
+        console.log(result);
+        res.json(result);
+
+    });
+
+
+});
+
+
+router.get('/api/scoresort/', function(req, res, next) {
+
+    Score.aggregate([
+
+        { $group: {
+            _id: "$username",
+            total: { $sum: "$score"  },
+            count: {$sum: 1}
+        }},
+        {$sort: {total: 1}}
+    ], function (err, result) {
+        if (err) {
+            console.log(err);
+            res.json(err);
+        }
+        console.log(result);
+        res.json(result);
+
+    });
+
+
+});
 module.exports = router;
