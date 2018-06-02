@@ -18,7 +18,7 @@ var db = require('monk')('localhost/nodeblog');*/
 
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://travelblog:xxx@xx.mlab.com:55768/xx');
-mongoose.connect('mongodb://plantify:plantify123@ds117200.mlab.com:17200/plantify');
+mongoose.connect('mongodb://xx:xxx@xxx.mlab.com:17200/xxxx');
 //mongoose.connect('mongodb://localhost/nodeblog');
 var db = mongoose.connection;
 
